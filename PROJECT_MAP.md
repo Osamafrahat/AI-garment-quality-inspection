@@ -1,8 +1,8 @@
-# Car Rental Management Platform - Project Map
+# PROJECT_MAP.md — تطبيق هاتف لإدارة المزرعة عن بُعد
 
-**Generated:** 2026-07-28  
-**Architecture:** Modular Monolith (Microservices extraction path documented)  
-**Stack Baseline:** 2026-07 (Node 24 LTS / React 19.2 / Next.js 15.5 / Prisma 7.9 / PostgreSQL 17 / TS 5.6 / Tailwind 4)
+**Generated:** 2026-07-28
+**Architecture Decision:** Mobile-First Monolith (Microservices extraction path documented in [ORPHANS & PENDING])
+**Stack Baseline Date:** 2026-07 (Node 24 LTS / React Native 0.86 / Express 5 / Prisma 7.9 / PostgreSQL 18 / TS 7.0)
 
 ---
 
@@ -10,39 +10,32 @@
 
 | Layer | Technology | Version | Rationale |
 |-------|------------|---------|-----------|
-| **Runtime** | Node.js | 24.18.0 LTS (Krypton) | Active LTS until 2026-10 |
+| **Runtime** | Node.js | 24.18.0 LTS (Krypton) | Active LTS until 2026-10, maintenance to 2028-04 |
 | **Package Manager** | pnpm | 9.x | Fast, disk-efficient, monorepo-native |
-| **Language** | TypeScript | 5.6 | Strict mode, strictNullChecks, exactOptionalPropertyTypes |
-| **Frontend (Web)** | Next.js | 15.5.x (App Router, Turbopack) | React 19 support, stable Turbopack, Server Actions |
-| **Frontend (Mobile)** | Expo | SDK 51 / React Native 0.76 | Shared TS types, Expo Router v4, EAS builds |
-| **UI Library** | Tailwind CSS | 4.0 | CSS-first config, OKLCH colors, faster builds |
-| **UI Components** | shadcn/ui + Radix UI | Latest | Accessible, unstyled, Tailwind 4 compatible |
-| **State (Client)** | TanStack Query v5 + Zustand | Latest | Server state + lightweight client state |
-| **Forms** | React Hook Form + Zod | Latest | Type-safe validation, RHF 7.52+ |
-| **Auth** | Auth.js (NextAuth v5) | Beta/RC 2026 | React 19 compatible, Edge-ready, Drizzle/Prisma adapters |
-| **Database** | PostgreSQL | 17 (Current) | JSONB, partitioning, logical replication |
-| **ORM** | Prisma ORM | 7.9.0 | Adapter-based (@prisma/adapter-pg), no query engine binary |
+| **Language** | TypeScript | 7.0 | Go native compiler, 10x faster builds, strict mode |
+| **Mobile Framework** | React Native | 0.86.0 (Active) | New Architecture default, Edge-to-Edge, Metro 0.84.2 |
+| **Navigation** | React Navigation | 7.3.14 (stable) | Native stack, bottom tabs, drawer |
+| **State (Client)** | Zustand | 5.0.14 | Lightweight, no boilerplate, hooks-based |
+| **Local Storage** | React Native MMKV | 4.3.2 | Fastest key-value storage, Nitro Module |
+| **Forms** | React Hook Form + Zod | Latest | Type-safe validation, minimal re-renders |
+| **Backend Framework** | Express | 5.2.1 (ACTIVE) | LTS until 2027, async/await native |
+| **Database** | PostgreSQL | 18.4 (Latest Stable) | JSONB, partitioning, logical replication |
+| **ORM** | Prisma ORM | 7.9.0 | Adapter-based, no query engine binary |
 | **Migrations** | Prisma Migrate | 7.9.0 | `migrate dev` (dev), `migrate deploy` (prod) |
-| **API Layer** | Next.js Server Actions + tRPC v11 | Next.js 15 SA + tRPC 11 | Type-safe RPC for mobile, Server Actions for web |
-| **Realtime** | Socket.io / Pusher | Latest | WebSocket for fleet status, chat |
-| **File Storage** | S3-compatible (MinIO / S3 / R2) | - | Presigned URLs, multipart upload |
-| **Background Jobs** | BullMQ + Redis | BullMQ 5.x / Redis 7 | Job queues for billing, notifications, reports |
-| **Logging** | Pino (async) + Loki/Grafana | Pino 9.x | Async, structured JSON, low overhead |
-| **Metrics** | Prometheus + Grafana | Prometheus 2.54+ | /metrics endpoint, custom business metrics |
-| **Tracing** | OpenTelemetry + Tempo/Jaeger | OTel JS 0.55+ | Distributed tracing ready for extraction |
-| **Testing** | Vitest + Playwright + React Native Testing Library | Latest | Unit, integration, E2E, mobile |
-| **CI/CD** | GitHub Actions + Docker | - | Build, test, lint, typecheck, deploy |
-| **Container** | Docker + docker-compose | - | Multi-stage builds, distroless base |
-| **Mobile Build** | EAS Build (Expo) | - | Managed builds for iOS/Android |
+| **API Layer** | REST + Zod Validation | Express 5 + Zod | Simple, mobile-friendly, type-safe |
+| **Realtime** | Socket.io | Latest | WebSocket for sensor data, alerts |
+| **File Storage** | S3-compatible (MinIO / S3 / R2) | - | Presigned URLs for farm images |
+| **Background Jobs** | BullMQ + Redis | BullMQ 5.x / Redis 7 | Job queues for notifications, reports |
+| **Logging** | Pino (async) | Pino 9.x | Async, structured JSON, low overhead |
+| **Testing** | Vitest + React Native Testing Library | Latest | Unit, integration, E2E |
+| **CI/CD** | GitHub Actions + EAS Build | - | Mobile builds, API deployment |
 
 **Explicitly Avoided (Deprecated/Unstable):**
 - Node.js 26 (Current, not LTS)
 - Prisma < 7 (legacy query engine binary)
-- Tailwind CSS v3 (legacy config)
-- Next.js Pages Router (legacy)
-- React 18 (end of active support Dec 2024)
-- Prisma `db push` in production (use `migrate deploy`)
-- `@prisma/client` without adapter in serverless (use `@prisma/adapter-pg`)
+- React Native < 0.86 (Old Architecture)
+- Express 4.x (Maintenance only, EOL soon)
+- PostgreSQL < 18 (older major versions)
 
 ---
 
@@ -50,49 +43,35 @@
 
 ### User Journeys (Verifiable Goals)
 
-#### Customer Journey (Web + Mobile)
-1. **Browse Fleet** → Filter by category, date range, location → View vehicle details + pricing
-2. **Authenticate** → Email/password or OAuth (Google/Apple) → JWT + HttpOnly cookie
-3. **Create Booking** → Select vehicle, dates, pickup/return location, extras → Price calculation → Confirm
-4. **Payment** → Stripe PaymentIntent → 3D Secure → Booking confirmed + hold on card
-5. **Manage Booking** → View upcoming/past, modify (if policy allows), cancel (refund rules)
-6. **Pickup/Return** → QR code scan → Condition report (photos) → Digital signature
-7. **Post-Rental** → Invoice download, review, loyalty points
+#### Farmer Journey (Mobile App)
+1. **Dashboard** -> View farm overview: crops status, livestock health, weather, alerts
+2. **Crop Management** -> Add/edit fields, track planting/harvest dates, log activities (watering, fertilizing, spraying)
+3. **Livestock Management** -> Register animals, track health records, feeding schedules, veterinary visits
+4. **Irrigation Control** -> View zones, manual/automatic scheduling, sensor readings (moisture, pH)
+5. **Weather Monitoring** -> Current conditions, 7-day forecast, alerts (frost, heavy rain, wind)
+6. **Inventory Management** -> Track seeds, fertilizers, feed, equipment; low stock alerts
+7. **Worker Management** -> Assign tasks, track attendance, log work hours
+8. **Financial Tracking** -> Log expenses/revenue, view profit/loss, export reports
 
-#### Staff Journey (Admin Web)
-1. **Dashboard** → Fleet utilization, revenue, overdue returns, alerts
-2. **Fleet Management** → CRUD vehicles, categories, maintenance schedules, availability calendar
-3. **Booking Management** → View all, override, manual create, check-in/out, damage assessment
-4. **Customer Management** → Profiles, KYC, rental history, credit limits, blacklist
-5. **Billing/Invoicing** → Invoices, payments, refunds, disputes, Stripe reconciliation
-6. **Reports** → Revenue, utilization, maintenance costs, customer LTV, export CSV/PDF
-
-#### Mobile Staff (Expo App)
-- Quick check-in/out via QR scan
-- Damage photo capture + annotation
-- Offline-first sync (WatermelonDB / React Query persist)
-
----
-
-### Data Flow (API/Server Actions)
+### Data Flow (API)
 
 ```
-┌─────────────┐     Server Actions / tRPC      ┌──────────────┐
-│  Next.js    │  ◄────────────────────────────►  │  Prisma ORM  │
-│  (Web)      │                                 │  (PostgreSQL)  │
-└──────┬──────┘                                 └──────┬───────┘
-       │                                               │
-       ▼                                               ▼
-┌─────────────┐                              ┌──────────────┐
-│  Expo App   │  ◄──── tRPC / REST ─────────►  │  Redis       │
-│  (Mobile)   │                                 │  (Cache/Queue)│
-└─────────────┘                                 └──────────────┘
-       │                                               │
-       ▼                                               ▼
+┌─────────────────┐         REST API          ┌──────────────────┐
+│  React Native   │  <──────────────────────>  │  Express 5 API   │
+│  (Mobile App)   │                            │  (Node.js 24)    │
+└────────┬────────┘                            └────────┬─────────┘
+         │                                              │
+         v                                              v
+┌─────────────────┐                            ┌──────────────────┐
+│  MMKV Storage   │                            │  Prisma ORM      │
+│  (Offline Cache)│                            │  (PostgreSQL 18) │
+└─────────────────┘                            └──────────────────┘
+                                                       │
+                                                       v
 ┌─────────────────────────────────────────────────────────────┐
 │                    Background Workers (BullMQ)              │
-│  • Billing/Invoicing  • Notifications  • Maintenance Scheduling      │
-│  • Report Generation  • Stripe Webhook Handling             │
+│  • Notification Dispatch  • Report Generation              │
+│  • IoT Data Processing   • Scheduled Tasks                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -103,92 +82,88 @@
 ### Monorepo Structure (pnpm Workspaces)
 
 ```
-car-rental/
+farm-management/
 ├── apps/
-│   ├── web/                    # Next.js 15 (App Router)
-│   │   ├── src/
-│   │   │   ├── app/            # App Router pages + Server Actions
-│   │   │   ├── components/     # Shared UI components (shadcn/ui)
-│   │   │   ├── lib/            # Auth, Prisma client, utilities
-│   │   │   ├── features/       # Domain features (booking, fleet, billing)
-│   │   │   │   ├── booking/
-│   │   │   │   ├── fleet/
-│   │   │   │   ├── billing/
-│   │   │   │   ├── customer/
-│   │   │   │   └── reports/
-│   │   │   └── trpc/           # tRPC routers (shared with mobile)
+│   ├── mobile/                     # React Native 0.86 (Expo)
+│   │   ├── app/                    # Expo Router (file-based routing)
+│   │   ├── components/             # Reusable UI components
+│   │   ├── features/               # Domain features
+│   │   │   ├── dashboard/
+│   │   │   ├── crops/
+│   │   │   ├── livestock/
+│   │   │   ├── irrigation/
+│   │   │   ├── weather/
+│   │   │   ├── inventory/
+│   │   │   ├── workers/
+│   │   │   └── finance/
+│   │   ├── stores/                 # Zustand stores
+│   │   ├── services/               # API client, MMKV, sensors
+│   │   ├── hooks/                  # Custom React hooks
+│   │   ├── utils/                  # Pure utility functions
 │   │   └── package.json
 │   │
-│   └── mobile/                 # Expo (React Native)
-│       ├── app/                # Expo Router v4 (file-based routing)
-│       ├── components/
-│       ├── lib/
-│       ├── features/           # Mirrors web features (shared types)
+│   └── api/                        # Express 5 Backend
+│       ├── src/
+│       │   ├── routes/             # Express routers per domain
+│       │   ├── controllers/        # Request handlers
+│       │   ├── services/           # Business logic
+│       │   ├── middleware/         # Auth, validation, error handling
+│       │   ├── validators/        # Zod schemas
+│       │   └── index.ts           # App entry point
 │       └── package.json
 │
 ├── packages/
-│   ├── core/                   # Shared kernel (ZERO business logic)
+│   ├── core/                       # Shared kernel (ZERO business logic)
 │   │   ├── src/
-│   │   │   ├── config/         # Env validation (Zod)
-│   │   │   ├── logging/        # Pino logger (async, structured)
-│   │   │   ├── errors/         # AppError classes, error codes
-│   │   │   ├── validation/     # Shared Zod schemas
-│   │   │   └── utils/          # Pure utils (date, currency, id)
+│   │   │   ├── config/             # Env validation (Zod)
+│   │   │   ├── logging/            # Pino logger (async, structured)
+│   │   │   ├── errors/             # AppError classes, error codes
+│   │   │   ├── validation/         # Shared Zod schemas
+│   │   │   └── utils/              # Pure utils (date, currency, id)
 │   │   └── package.json
 │   │
-│   ├── db/                     # Database layer (Prisma)
+│   ├── db/                         # Database layer (Prisma)
 │   │   ├── prisma/
-│   │   │   ├── schema.prisma   # Single source of truth
+│   │   │   ├── schema.prisma       # Single source of truth
 │   │   │   └── migrations/
 │   │   ├── src/
-│   │   │   ├── client.ts       # PrismaClient singleton (adapter-pg)
-│   │   │   ├── extensions/     # Prisma extensions (soft delete, audit)
-│   │   │   └── repositories/   # Repository pattern per domain
+│   │   │   ├── client.ts           # PrismaClient singleton
+│   │   │   ├── extensions/         # Prisma extensions (soft delete, audit)
+│   │   │   └── repositories/       # Repository pattern per domain
 │   │   └── package.json
 │   │
-│   ├── auth/                   # Auth configuration (Auth.js v5)
+│   ├── auth/                       # Authentication (JWT + Refresh Token)
 │   │   ├── src/
-│   │   │   ├── config.ts       # Providers, callbacks, adapter
-│   │   │   ├── permissions.ts  # RBAC definitions
-│   │   │   └── middleware.ts   # Next.js middleware
+│   │   │   ├── config.ts           # JWT settings, providers
+│   │   │   ├── permissions.ts      # RBAC definitions
+│   │   │   └── middleware.ts       # Express middleware
 │   │   └── package.json
 │   │
-│   ├── billing/                # Stripe integration (shared)
+│   ├── notifications/              # Push notifications (Expo Push)
 │   │   ├── src/
-│   │   │   ├── client.ts       # Stripe server client
-│   │   │   ├── webhooks.ts     # Event handlers
-│   │   │   ├── pricing.ts      # Pricing engine (pure functions)
-│   │   │   └── invoicing.ts    # Invoice generation (PDFKit)
+│   │   │   ├── providers/          # Expo Push, Email
+│   │   │   ├── templates/          # Notification templates
+│   │   │   └── queue.ts            # BullMQ job definitions
 │   │   └── package.json
 │   │
-│   ├── messaging/              # Notifications (email, push, SMS)
-│   │   ├── src/
-│   │   │   ├── providers/      # Nodemailer, Expo Push, Twilio
-│   │   │   ├── templates/      # React Email templates
-│   │   │   └── queue.ts        # BullMQ job definitions
-│   │   └── package.json
-│   │
-│   └── api-contracts/          # Shared tRPC/OpenAPI types
+│   └── api-contracts/              # Shared Zod schemas (mobile + API)
 │       ├── src/
-│       │   ├── routers/        # tRPC router definitions
-│       │   └── schemas/        # Zod schemas (shared web+mobile)
+│       │   ├── schemas/            # Zod schemas (shared validation)
+│       │   └── types/              # TypeScript types
 │       └── package.json
 │
 ├── tools/
-│   ├── eslint-config/          # Shared ESLint config
-│   ├── tsconfig/               # Shared TS configs (base, nextjs, react-native)
-│   └── tailwind-config/        # Shared Tailwind 4 config (CSS vars)
+│   ├── eslint-config/              # Shared ESLint config
+│   └── tsconfig/                   # Shared TS configs
 │
 ├── docker/
-│   ├── docker-compose.yml      # Postgres, Redis, MinIO, Mailpit
-│   ├── Dockerfile.web
-│   ├── Dockerfile.worker
+│   ├── docker-compose.yml          # PostgreSQL, Redis, MinIO
 │   └── .env.example
 │
 ├── pnpm-workspace.yaml
 ├── package.json
-├── turbo.json                  # Turborepo config
-└── README.md
+├── turbo.json                      # Turborepo config
+└── PROJECT_MAP.md
 ```
 
 ### Domain Model (Prisma Schema - Core Entities)
@@ -211,485 +186,417 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  emailVerified DateTime?
-  passwordHash  String?
-  name          String?
-  phone         String?
-  avatarUrl     String?
-  role          Role      @default(CUSTOMER)
+  phone         String?   @unique
+  passwordHash  String
+  name          String
+  role          UserRole  @default(FARMER)
   status        UserStatus @default(ACTIVE)
+  farmId        String?
+  farm          Farm?     @relation(fields: [farmId], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  customer      Customer?
-  staff         Staff?
-  bookings      Booking[]
+  tasks         Task[]
+  activityLogs  ActivityLog[]
   notifications Notification[]
-  auditLogs     AuditLog[]
 
   @@index([email])
-  @@index([role])
+  @@index([farmId])
 }
 
-enum Role {
-  CUSTOMER
-  STAFF
-  ADMIN
+enum UserRole {
+  FARMER
   MANAGER
+  WORKER
+  ADMIN
 }
 
 enum UserStatus {
   ACTIVE
+  INACTIVE
   SUSPENDED
-  DELETED
 }
 
-model Customer {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  licenseNumber   String?  @unique
-  licenseExpiry   DateTime?
-  licenseCountry  String?
-  dateOfBirth     DateTime?
-  address         Json?
-  emergencyContact Json?
-  creditLimit     Decimal  @default(0) @db.Decimal(10, 2)
-  loyaltyPoints   Int      @default(0)
-  isBlacklisted   Boolean  @default(false)
-  blacklistReason String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  bookings        Booking[]
-  invoices        Invoice[]
-  payments        Payment[]
-  documents       Document[]
-}
-
-model Staff {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  employeeId  String   @unique
-  department  String?
-  hireDate    DateTime
-  permissions Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  maintenanceLogs MaintenanceLog[]
-  inspections     Inspection[]
-}
-
-// ──────────────────────────────────────────────
-// FLEET DOMAIN
-// ──────────────────────────────────────────────
-
-model VehicleCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?
-  dailyRate   Decimal  @db.Decimal(10, 2)
-  weeklyRate  Decimal  @db.Decimal(10, 2)
-  monthlyRate Decimal  @db.Decimal(10, 2)
-  deposit     Decimal  @db.Decimal(10, 2)
-  imageUrl    String?
-  sortOrder   Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  vehicles    Vehicle[]
-}
-
-model Vehicle {
-  id            String         @id @default(cuid())
-  categoryId    String
-  category      VehicleCategory @relation(fields: [categoryId], references: [id])
-  licensePlate  String         @unique
-  vin           String         @unique
-  make          String
-  model         String
-  year          Int
-  color         String
-  fuelType      FuelType
-  transmission  Transmission
-  mileage       Int            @default(0)
-  status        VehicleStatus  @default(AVAILABLE)
-  locationId    String?
-  location      Location?      @relation(fields: [locationId], references: [id])
-  purchaseDate  DateTime?
-  purchasePrice Decimal?       @db.Decimal(12, 2)
-  insuranceExpiry DateTime?
-  registrationExpiry DateTime?
-  lastServiceDate DateTime?
-  lastServiceMileage Int?
-  notes         String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  bookings          Booking[]
-  maintenanceLogs   MaintenanceLog[]
-  inspections       Inspection[]
-  documents         Document[]
-  gpsTracks         GPSTrack[]
-
-  @@index([status])
-  @@index([locationId])
-  @@index([categoryId])
-}
-
-enum FuelType {
-  PETROL
-  DIESEL
-  HYBRID
-  ELECTRIC
-}
-
-enum Transmission {
-  MANUAL
-  AUTOMATIC
-  CVT
-}
-
-enum VehicleStatus {
-  AVAILABLE
-  RENTED
-  MAINTENANCE
-  OUT_OF_SERVICE
-  RESERVED
-}
-
-model Location {
-  id        String   @id @default(cuid())
-  name      String
-  address   String
-  city      String
-  state     String?
-  country   String
-  lat       Decimal  @db.Decimal(10, 8)
-  lng       Decimal  @db.Decimal(11, 8)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  vehicles  Vehicle[]
-  bookings  Booking[] @relation("PickupLocation")
-  returns   Booking[] @relation("ReturnLocation")
-}
-
-model MaintenanceLog {
-  id          String   @id @default(cuid())
-  vehicleId   String
-  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  staffId     String?
-  staff       Staff?   @relation(fields: [staffId], references: [id])
-  type        MaintenanceType
-  description String
-  cost        Decimal  @db.Decimal(10, 2)
-  mileage     Int
-  startedAt   DateTime
-  completedAt DateTime?
-  nextServiceDate DateTime?
-  nextServiceMileage Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([vehicleId])
-  @@index([startedAt])
-}
-
-enum MaintenanceType {
-  ROUTINE
-  REPAIR
-  INSPECTION
-  CLEANING
-  TIRE_CHANGE
-  OIL_CHANGE
-  BATTERY
-  OTHER
-}
-
-model Inspection {
-  id          String       @id @default(cuid())
-  vehicleId   String
-  vehicle     Vehicle      @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  staffId     String
-  staff       Staff        @relation(fields: [staffId], references: [id])
-  bookingId   String?
-  booking     Booking?     @relation(fields: [bookingId], references: [id])
-  type        InspectionType
-  status      InspectionStatus
-  notes       String?
-  photos      String[]     // S3 keys
-  signature   String?      // S3 key
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@index([vehicleId])
-  @@index([bookingId])
-}
-
-enum InspectionType {
-  PRE_RENTAL
-  POST_RENTAL
-  DAMAGE_ASSESSMENT
-  ROUTINE
-}
-
-enum InspectionStatus {
-  PENDING
-  COMPLETED
-  DISPUTED
-}
-
-// ──────────────────────────────────────────────
-// BOOKING DOMAIN
-// ──────────────────────────────────────────────
-
-model Extra {
+model Farm {
   id          String   @id @default(cuid())
   name        String
   description String?
-  dailyRate   Decimal  @db.Decimal(10, 2)
-  category    ExtraCategory
-  isActive    Boolean  @default(true)
+  location    Json?    // { lat, lng, address, city, country }
+  area        Decimal? @db.Decimal(10, 2) // hectares
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  bookings    BookingExtra[]
+  users       User[]
+  fields      Field[]
+  livestock   Livestock[]
+  inventory   Inventory[]
+  irrZones    IrrigationZone[]
+
+  @@index([name])
 }
 
-model Booking {
-  id              String        @id @default(cuid())
-  bookingNumber   String        @unique @default(cuid())
-  customerId      String
-  customer        Customer      @relation(fields: [customerId], references: [id])
-  vehicleId       String
-  vehicle         Vehicle       @relation(fields: [vehicleId], references: [id])
-  pickupLocationId String
-  pickupLocation  Location      @relation("PickupLocation", fields: [pickupLocationId], references: [id])
-  returnLocationId String
-  returnLocation  Location      @relation("ReturnLocation", fields: [returnLocationId], references: [id])
-  status          BookingStatus @default(PENDING)
-  startDate       DateTime
-  endDate         DateTime
-  actualStartDate DateTime?
-  actualEndDate   DateTime?
-  dailyRate       Decimal       @db.Decimal(10, 2)
-  totalDays       Int
-  subtotal        Decimal       @db.Decimal(10, 2)
-  taxAmount       Decimal       @db.Decimal(10, 2)
-  discountAmount  Decimal       @default(0) @db.Decimal(10, 2)
-  totalAmount     Decimal       @db.Decimal(10, 2)
-  depositAmount   Decimal       @db.Decimal(10, 2)
-  depositRefunded Decimal       @default(0) @db.Decimal(10, 2)
-  cancellationReason String?
-  cancelledAt     DateTime?
-  cancelledBy     String?
-  notes           String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+// ──────────────────────────────────────────────
+// CROPS DOMAIN
+// ──────────────────────────────────────────────
 
-  extras          BookingExtra[]
-  payments        Payment[]
-  invoices        Invoice[]
-  inspections     Inspection[]
-  gpsTracks       GPSTrack[]
+model Field {
+  id          String   @id @default(cuid())
+  farmId      String
+  farm        Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  name        String
+  area        Decimal  @db.Decimal(10, 2) // hectares
+  soilType    String?
+  location    Json?    // { lat, lng, polygon }
+  status      FieldStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@index([customerId])
-  @@index([vehicleId])
+  crops       Crop[]
+  activities  Activity[]
+
+  @@index([farmId])
   @@index([status])
-  @@index([startDate, endDate])
 }
 
-enum BookingStatus {
-  PENDING
-  CONFIRMED
+enum FieldStatus {
   ACTIVE
-  COMPLETED
-  CANCELLED
-  NO_SHOW
-  DISPUTED
+  FALLOW
+  MAINTENANCE
 }
 
-model BookingExtra {
-  id        String   @id @default(cuid())
-  bookingId String
-  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  extraId   String
-  extra     Extra    @relation(fields: [extraId], references: [id])
-  quantity  Int      @default(1)
-  unitPrice Decimal  @db.Decimal(10, 2)
-  totalPrice Decimal @db.Decimal(10, 2)
-  createdAt DateTime @default(now())
+model Crop {
+  id            String     @id @default(cuid())
+  fieldId       String
+  field         Field      @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  name          String
+  variety       String?
+  plantingDate  DateTime
+  harvestDate   DateTime?
+  expectedYield Decimal?   @db.Decimal(10, 2) // kg
+  actualYield   Decimal?   @db.Decimal(10, 2)
+  status        CropStatus @default(PLANTED)
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
-  @@unique([bookingId, extraId])
+  activities    Activity[]
+
+  @@index([fieldId])
+  @@index([status])
+  @@index([plantingDate])
 }
 
-enum ExtraCategory {
-  INSURANCE
+enum CropStatus {
+  PLANTED
+  GROWING
+  FLOWERING
+  HARVESTED
+  FAILED
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  fieldId     String
+  field       Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  cropId      String?
+  crop        Crop?    @relation(fields: [cropId], references: [id])
+  type        ActivityType
+  description String
+  date        DateTime
+  cost        Decimal? @db.Decimal(10, 2)
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([fieldId])
+  @@index([cropId])
+  @@index([date])
+}
+
+enum ActivityType {
+  PLANTING
+  WATERING
+  FERTILIZING
+  SPRAYING
+  HARVESTING
+  TILLING
+  PRUNING
+  OTHER
+}
+
+// ──────────────────────────────────────────────
+// LIVESTOCK DOMAIN
+// ──────────────────────────────────────────────
+
+model Livestock {
+  id          String        @id @default(cuid())
+  farmId      String
+  farm        Farm          @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  name        String
+  type        LivestockType
+  breed       String?
+  tagNumber   String?       @unique
+  birthDate   DateTime?
+  gender      Gender?
+  status      LivestockStatus @default(ACTIVE)
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  healthLogs  HealthLog[]
+  feedLogs    FeedLog[]
+
+  @@index([farmId])
+  @@index([type])
+  @@index([status])
+}
+
+enum LivestockType {
+  CATTLE
+  SHEEP
+  GOAT
+  POULTRY
+  PIG
+  OTHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum LivestockStatus {
+  ACTIVE
+  SOLD
+  DECEASED
+  ARCHIVED
+}
+
+model HealthLog {
+  id          String   @id @default(cuid())
+  livestockId String
+  livestock   Livestock @relation(fields: [livestockId], references: [id], onDelete: Cascade)
+  type        HealthType
+  description String
+  date        DateTime
+  vetName     String?
+  cost        Decimal? @db.Decimal(10, 2)
+  nextDue     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([livestockId])
+  @@index([date])
+}
+
+enum HealthType {
+  VACCINATION
+  TREATMENT
+  CHECKUP
+  SURGERY
+  OTHER
+}
+
+model FeedLog {
+  id          String   @id @default(cuid())
+  livestockId String
+  livestock   Livestock @relation(fields: [livestockId], references: [id], onDelete: Cascade)
+  feedType    String
+  quantity    Decimal  @db.Decimal(10, 2) // kg
+  unit        String   @default("kg")
+  date        DateTime
+  cost        Decimal? @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+
+  @@index([livestockId])
+  @@index([date])
+}
+
+// ──────────────────────────────────────────────
+// IRRIGATION DOMAIN
+// ──────────────────────────────────────────────
+
+model IrrigationZone {
+  id          String    @id @default(cuid())
+  farmId      String
+  farm        Farm      @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  name        String
+  fieldId     String?
+  status      IrrigationStatus @default(AUTO)
+  schedule    Json?     // { cron, duration, intervals }
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  sensorLogs  SensorLog[]
+
+  @@index([farmId])
+}
+
+enum IrrigationStatus {
+  AUTO
+  MANUAL
+  OFFLINE
+}
+
+model SensorLog {
+  id              String   @id @default(cuid())
+  zoneId          String
+  zone            IrrigationZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  temperature     Decimal? @db.Decimal(5, 2) // celsius
+  humidity        Decimal? @db.Decimal(5, 2) // percentage
+  soilMoisture    Decimal? @db.Decimal(5, 2) // percentage
+  soilPH          Decimal? @db.Decimal(4, 2)
+  lightIntensity  Decimal? @db.Decimal(7, 2) // lux
+  windSpeed       Decimal? @db.Decimal(5, 2) // km/h
+  rainfall        Decimal? @db.Decimal(5, 2) // mm
+  recordedAt      DateTime @default(now())
+
+  @@index([zoneId, recordedAt])
+}
+
+// ──────────────────────────────────────────────
+// WEATHER DOMAIN
+// ──────────────────────────────────────────────
+
+model WeatherForecast {
+  id            String   @id @default(cuid())
+  farmId        String
+  date          DateTime
+  tempHigh      Decimal  @db.Decimal(5, 2)
+  tempLow       Decimal  @db.Decimal(5, 2)
+  condition     String   // sunny, cloudy, rainy, etc.
+  precipitation Decimal? @db.Decimal(5, 2) // mm
+  windSpeed     Decimal? @db.Decimal(5, 2) // km/h
+  humidity      Decimal? @db.Decimal(5, 2) // percentage
+  alert         String?
+  createdAt     DateTime @default(now())
+
+  @@unique([farmId, date])
+  @@index([farmId])
+}
+
+// ──────────────────────────────────────────────
+// INVENTORY DOMAIN
+// ──────────────────────────────────────────────
+
+model Inventory {
+  id          String        @id @default(cuid())
+  farmId      String
+  farm        Farm          @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  name        String
+  category    InventoryCategory
+  quantity    Decimal       @db.Decimal(10, 2)
+  unit        String        @default("kg")
+  minQuantity Decimal?      @db.Decimal(10, 2) // alert threshold
+  costPerUnit Decimal?      @db.Decimal(10, 2)
+  location    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  movements   InventoryMovement[]
+
+  @@index([farmId])
+  @@index([category])
+}
+
+enum InventoryCategory {
+  SEED
+  FERTILIZER
+  PESTICIDE
+  FEED
   EQUIPMENT
-  SERVICE
   FUEL
   OTHER
 }
 
+model InventoryMovement {
+  id            String   @id @default(cuid())
+  inventoryId   String
+  inventory     Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+  type          MovementType
+  quantity      Decimal  @db.Decimal(10, 2)
+  reference     String?  // purchase order, task reference
+  notes         String?
+  createdBy     String
+  createdAt     DateTime @default(now())
+
+  @@index([inventoryId])
+  @@index([createdAt])
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
 // ──────────────────────────────────────────────
-// BILLING DOMAIN
+// WORKERS DOMAIN
 // ──────────────────────────────────────────────
 
-model Invoice {
-  id            String        @id @default(cuid())
-  invoiceNumber String        @unique
-  bookingId     String        @unique
-  booking       Booking       @relation(fields: [bookingId], references: [id])
-  customerId    String
-  customer      Customer      @relation(fields: [customerId], references: [id])
-  status        InvoiceStatus @default(DRAFT)
-  subtotal      Decimal       @db.Decimal(10, 2)
-  taxAmount     Decimal       @db.Decimal(10, 2)
-  totalAmount   Decimal       @db.Decimal(10, 2)
-  paidAmount    Decimal       @default(0) @db.Decimal(10, 2)
-  dueDate       DateTime
-  issuedAt      DateTime?
-  paidAt        DateTime?
-  cancelledAt   DateTime?
-  pdfUrl        String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+model Task {
+  id          String     @id @default(cuid())
+  farmId      String
+  title       String
+  description String?
+  assignedTo  String?
+  user        User?      @relation(fields: [assignedTo], references: [id])
+  status      TaskStatus @default(PENDING)
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-  payments      Payment[]
-  lineItems     InvoiceLineItem[]
-
-  @@index([customerId])
+  @@index([farmId])
+  @@index([assignedTo])
   @@index([status])
-  @@index([dueDate])
 }
 
-enum InvoiceStatus {
-  DRAFT
-  ISSUED
-  PAID
-  PARTIALLY_PAID
-  OVERDUE
-  CANCELLED
-  REFUNDED
-}
-
-model InvoiceLineItem {
-  id          String   @id @default(cuid())
-  invoiceId   String
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  description String
-  quantity    Int
-  unitPrice   Decimal  @db.Decimal(10, 2)
-  totalPrice  Decimal  @db.Decimal(10, 2)
-  type        LineItemType
-  metadata    Json?
-  createdAt   DateTime @default(now())
-}
-
-enum LineItemType {
-  RENTAL
-  EXTRA
-  DEPOSIT
-  FEE
-  TAX
-  DISCOUNT
-  REFUND
-}
-
-model Payment {
-  id              String          @id @default(cuid())
-  paymentNumber   String          @unique
-  bookingId       String?
-  booking         Booking?        @relation(fields: [bookingId], references: [id])
-  invoiceId       String?
-  invoice         Invoice?        @relation(fields: [invoiceId], references: [id])
-  customerId      String
-  customer        Customer        @relation(fields: [customerId], references: [id])
-  amount          Decimal         @db.Decimal(10, 2)
-  currency        String          @default("USD")
-  status          PaymentStatus   @default(PENDING)
-  method          PaymentMethod
-  provider        String          @default("stripe")
-  providerPaymentId String?
-  providerRefundId String?
-  description     String?
-  metadata        Json?
-  processedAt     DateTime?
-  refundedAt      DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  @@index([bookingId])
-  @@index([invoiceId])
-  @@index([customerId])
-  @@index([status])
-  @@index([providerPaymentId])
-}
-
-enum PaymentStatus {
+enum TaskStatus {
   PENDING
-  PROCESSING
-  SUCCEEDED
-  FAILED
+  IN_PROGRESS
+  COMPLETED
   CANCELLED
-  REFUNDED
-  PARTIALLY_REFUNDED
-  DISPUTED
 }
 
-enum PaymentMethod {
-  CARD
-  CASH
-  BANK_TRANSFER
-  WALLET
-  OTHER
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// ──────────────────────────────────────────────
+// FINANCE DOMAIN
+// ──────────────────────────────────────────────
+
+model Transaction {
+  id          String            @id @default(cuid())
+  farmId      String
+  type        TransactionType
+  category    String
+  amount      Decimal           @db.Decimal(12, 2)
+  currency    String            @default("USD")
+  date        DateTime
+  description String?
+  reference   String?           // invoice, receipt number
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([farmId])
+  @@index([type])
+  @@index([date])
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
 }
 
 // ──────────────────────────────────────────────
 // SUPPORTING DOMAINS
 // ──────────────────────────────────────────────
-
-model Document {
-  id        String         @id @default(cuid())
-  entityType DocumentEntity
-  entityId  String
-  type      DocumentType
-  name      String
-  url       String         // S3 key
-  mimeType  String
-  size      Int
-  metadata  Json?
-  uploadedBy String?
-  createdAt DateTime       @default(now())
-
-  @@index([entityType, entityId])
-}
-
-enum DocumentEntity {
-  CUSTOMER
-  VEHICLE
-  BOOKING
-  STAFF
-  INVOICE
-}
-
-enum DocumentType {
-  ID_DOCUMENT
-  LICENSE
-  INSURANCE
-  REGISTRATION
-  INSPECTION_PHOTO
-  DAMAGE_PHOTO
-  CONTRACT
-  INVOICE_PDF
-  RECEIPT
-  OTHER
-}
 
 model Notification {
   id        String              @id @default(cuid())
@@ -700,91 +607,179 @@ model Notification {
   message   String
   data      Json?
   readAt    DateTime?
+  sentAt    DateTime?
   createdAt DateTime            @default(now())
 
   @@index([userId, readAt])
-  @@index([type])
+  @@index([createdAt])
 }
 
 enum NotificationType {
-  BOOKING_CONFIRMED
-  BOOKING_REMINDER
-  BOOKING_CANCELLED
-  PAYMENT_RECEIVED
-  PAYMENT_FAILED
-  PICKUP_REMINDER
-  RETURN_REMINDER
-  MAINTENANCE_DUE
-  DAMAGE_REPORTED
-  INVOICE_ISSUED
-  REVIEW_REQUEST
-  SYSTEM_ALERT
+  WEATHER_ALERT
+  TASK_REMINDER
+  INVENTORY_LOW
+  HEALTH_DUE
+  IRRIGATION_ALERT
+  SYSTEM
 }
 
-model AuditLog {
+model ActivityLog {
   id        String   @id @default(cuid())
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   action    String
-  entity    String
+  entityType String
   entityId  String
   oldData   Json?
   newData   Json?
   ipAddress String?
-  userAgent String?
   createdAt DateTime @default(now())
 
   @@index([userId])
-  @@index([entity, entityId])
+  @@index([entityType, entityId])
   @@index([createdAt])
 }
 ```
+
+### Module Boundaries & Dependencies
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    apps/mobile (React Native 0.86)               │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │Dashboard│ │ Crops   │ │Livestock│ │Irrigation│ │Weather  │   │
+│  │ Feature │ │ Feature │ │ Feature │ │ Feature │ │ Feature │   │
+│  └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘   │
+└───────┼───────────┼───────────┼───────────┼───────────┼────────┘
+        │           │           │           │           │
+        v           v           v           v           v
+┌─────────────────────────────────────────────────────────────────┐
+│                    packages/api-contracts                       │
+│              (Zod schemas + Types - SHARED)                    │
+└─────────────────────────────────────────────────────────────────┘
+        │           │           │           │           │
+        v           v           v           v           v
+┌─────────────────────────────────────────────────────────────────┐
+│                         packages/db                              │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐   │
+│  │ Repositories│ │   Prisma    │ │ Extensions  │ │Migrations│   │
+│  │ (per domain)│ │   Client    │ │ (softDelete,│ │          │   │
+│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+        ^           ^           ^           ^           ^
+        │           │           │           │           │
+┌───────┴───────────┴───────────┴───────────┴───────────┴───────┐
+│                    packages/core (SHARED KERNEL)                │
+│  config | logging | errors | validation | utils | constants    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Dependency Rules (Enforced by ESLint):**
+- `apps/*` -> `packages/api-contracts` -> `packages/db` -> `packages/core`
+- `packages/*` -> `packages/core` ONLY
+- **NO** cross-feature imports (e.g., `features/crops` cannot import `features/livestock`)
+- **NO** `packages/db` imports in `apps/*` directly (must go through repositories)
 
 ---
 
 ## [ORPHANS & PENDING]
 
-### Open Decisions (DEC-*)
-
+### Critical Decisions Needed (Blockers)
 | ID | Decision | Options | Owner | Due |
 |----|----------|---------|-------|-----|
-| DEC-001 | Multi-tenancy | Single-tenant MVP vs Multi-tenant schema | Tech Lead | Sprint 0 |
-| DEC-002 | Real-time GPS | Polling vs WebSocket vs None | PO | Sprint 1 |
-| DEC-003 | Offline Mobile | WatermelonDB vs React Query persist vs None | Mobile Lead | Sprint 1 |
-| DEC-004 | Insurance Integration | Manual upload vs Provider API | PO | Sprint 2 |
+| DEC-001 | IoT Integration? | MQTT (complex) vs REST polling (simple) vs None (MVP) | Tech Lead | Sprint 0 |
+| DEC-002 | Weather API? | OpenWeatherMap (free tier) vs WeatherAPI vs Manual entry | PO | Sprint 0 |
+| DEC-003 | Offline Support? | MMKV cache (simple) vs WatermelonDB (complex) vs None | Mobile Lead | Sprint 1 |
+| DEC-004 | Multi-farm Support? | Single farm (MVP) vs Multi-farm (future) | PO | Sprint 0 |
 
-### Technical Debt (TECH-*)
+### Technical Debt / Extraction Candidates (Post-MVP)
+| ID | Item | Extraction Trigger | Target |
+|----|------|-------------------|--------|
+| EXT-001 | Notification Service | Multi-channel, template mgmt, scaling | Microservice |
+| EXT-002 | Weather/IoT Service | Real-time data, separate scaling | Microservice |
+| EXT-003 | Reporting/Analytics | Heavy read queries, separate scaling | Service + ClickHouse |
 
-| ID | Item | Options | Owner | Due |
-|----|------|---------|-------|-----|
-| TECH-001 | Prisma Pooling | PgBouncer vs Prisma Accelerate | Backend Lead | Sprint 0 |
-| TECH-002 | Soft Deletes | Prisma extension vs manual `deletedAt` | Backend Lead | Sprint 0 |
-| TECH-003 | Audit Logging | Middleware vs DB triggers vs App layer | Backend Lead | Sprint 0 |
+### Deferred / Nice-to-Have (Not in MVP)
+| ID | Feature | Reason |
+|----|---------|--------|
+| DEF-001 | AI Crop Disease Detection | Requires ML model, post-MVP |
+| DEF-002 | Drone Integration | Hardware dependency, complex |
+| DEF-003 | Marketplace (buy/sell produce) | Business model complexity |
+| DEF-004 | Multi-language Support | Localization complexity |
 
-### Future Microservices Extraction Path (EXT-*)
-
-| Service | Trigger | Dependencies | Notes |
-|---------|---------|--------------|-------|
-| **Fleet Service** | 1000+ vehicles, separate scaling | Vehicle, Category, Location, Maintenance, Inspection | Geo-distributed fleet needs |
-| **Booking Service** | High booking volume, complex rules | Booking, Extra, Customer | Separate read/write models |
-| **Billing Service** | PCI scope reduction, Stripe webhook volume | Invoice, Payment, Customer | Requires saga pattern for consistency |
-| **Customer Service** | CRM integration, loyalty program | Customer, User, Document | Profile enrichment pipeline |
-| **Notification Service** | Multi-channel, template management | Notification, Template, Provider | Already isolated in `packages/messaging` |
+### Open Technical Questions
+| ID | Question |
+|----|----------|
+| TECH-001 | Prisma connection pooling: PgBouncer vs Prisma Accelerate? |
+| TECH-002 | Soft deletes: Prisma extension vs manual `deletedAt` filter? |
+| TECH-003 | Push notifications: Expo Push vs Firebase Cloud Messaging? |
+| TECH-004 | Image storage: S3 presigned URLs vs local filesystem? |
 
 ---
 
-## Milestones (Verifiable Goals)
+## [MILESTONES] — Verifiable Goals
 
-| Milestone | Target | Verifiable Goal |
-|-----------|--------|-----------------|
-| **M0: Foundation** | Week 1 | `pnpm dev` starts web + mobile; `docker compose up` healthy |
-| **M1: Fleet & Booking** | Week 2-3 | CRUD fleet + create booking flow (web + mobile) |
-| **M2: Auth & Customers** | Week 3-4 | Sign up/in, customer profile, KYC upload |
-| **M3: Billing & Payments** | Week 4-5 | Stripe integration, invoice generation, payment flow |
-| **M4: Staff Operations** | Week 5-6 | Check-in/out, inspections, damage tracking (mobile) |
-| **M5: Reports & Dashboard** | Week 6-7 | Revenue, utilization, maintenance reports |
-| **M6: Hardening** | Week 7-8 | E2E tests, load test, observability, deploy staging |
-| **M7: Production Launch** | Week 8 | Deploy prod, monitoring, runbooks |
+| Milestone | Goal (Verifiable) | Exit Criteria |
+|-----------|-------------------|---------------|
+| **M0: Foundation** | Repo scaffolded, CI green, dev env up | `pnpm install && pnpm dev` -> Mobile + API + DB + Redis running; `pnpm test` passes |
+| **M1: Auth & Core** | JWT auth working (email/password), RBAC, user CRUD | E2E: Sign up -> Login -> Access protected route; Role guards enforced |
+| **M2: Farm & Fields** | Farm CRUD, Field CRUD, basic dashboard | API: Create farm -> Add field -> View dashboard; Mobile: Display farm info |
+| **M3: Crops Domain** | Crop lifecycle (plant -> grow -> harvest), activity logging | E2E: Add field -> Plant crop -> Log activity -> Mark harvested |
+| **M4: Livestock Domain** | Livestock CRUD, health logs, feed tracking | API: Add animal -> Log vaccination -> Record feeding; Mobile: Display health status |
+| **M5: Irrigation & Weather** | Zone management, sensor data display, weather forecast | API: Create zone -> Log sensor data; Mobile: Display weather, irrigation status |
+| **M6: Inventory & Finance** | Inventory tracking, transactions, low stock alerts | API: Add item -> Record movement -> View balance; Mobile: Display alerts |
+| **M7: Workers & Tasks** | Task management, worker assignment, attendance | E2E: Create task -> Assign worker -> Mark complete |
+| **M8: Hardening & Launch** | Load test, security audit, CI/CD, app store prep | API: 500 req/s < 200ms p95; Zero critical vulns; Build submitted to stores |
+
+---
+
+## [CONVENTIONS]
+
+### Git
+- **Trunk-based**: `main` only, short-lived feature branches (`feat/*`, `fix/*`)
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `chore:`, `refactor:`)
+- **PRs**: Required reviews (1), CI green, no merge conflicts
+
+### Code Style
+- **TypeScript**: `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`
+- **ESLint**: `@typescript-eslint/strict`, `eslint-plugin-import` boundaries
+- **Prettier**: Single quotes, trailing commas, 100 char width
+- **Naming**: PascalCase (types), camelCase (vars), UPPER_SNAKE (constants), kebab-case (files)
+
+### Error Handling
+- **Never** throw raw `Error` — use `AppError` subclasses with codes
+- **Never** `console.log` — use `logger.info/debug/warn/error` from `@core/logging`
+- **API Errors**: Standardized `{ code, message, details? }` via Express error middleware
+
+### Database
+- **Migrations only** — no `db push` in CI/prod
+- **Naming**: snake_case tables/columns, CUID IDs, `createdAt`/`updatedAt` on all
+- **Indexes**: Explicit `@@index` for all query patterns
+- **Soft delete**: `deletedAt` DateTime? + Prisma extension filter
+
+### Logging (Protocol 4: Safe Logging)
+```typescript
+// packages/core/src/logging/index.ts
+import pino from 'pino';
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  transport: process.env.NODE_ENV === 'development'
+    ? { target: 'pino-pretty', options: { colorize: true } }
+    : undefined,
+  redact: ['req.headers.authorization', '*.password', '*.token', '*.secret'],
+  base: { service: 'farm-management', env: process.env.NODE_ENV },
+});
+
+// Async, non-blocking — use child loggers for context
+export const createChildLogger = (bindings: Record<string, unknown>) => logger.child(bindings);
+```
+
+### Testing
+- **Unit**: Vitest, co-located `*.test.ts`
+- **Integration**: Vitest + Testcontainers (PostgreSQL, Redis)
+- **E2E Mobile**: Detox (iOS/Android simulators)
+- **Coverage**: 80% lines, 70% branches (enforced in CI)
 
 ---
 

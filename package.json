@@ -1,12 +1,14 @@
 {
-  "name": "car-rental",
+  "name": "farm-management",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",
+    "dev:mobile": "turbo run dev --filter=mobile",
+    "dev:api": "turbo run dev --filter=api",
     "build": "turbo run build",
-    "build:web": "turbo run build --filter=web",
     "build:mobile": "turbo run build --filter=mobile",
+    "build:api": "turbo run build --filter=api",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
@@ -27,7 +29,7 @@
     "husky": "^9.0.11",
     "prettier": "^3.2.5",
     "turbo": "^1.13.0",
-    "typescript": "^5.6.0"
+    "typescript": "^7.0.0"
   },
   "packageManager": "pnpm@9.6.0",
   "engines": {
