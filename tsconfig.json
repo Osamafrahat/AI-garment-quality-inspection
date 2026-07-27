@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@car-rental/core/*": ["packages/core/src/*"],
+      "@car-rental/db/*": ["packages/db/src/*"],
+      "@car-rental/api-contracts/*": ["packages/api-contracts/src/*"],
+      "@car-rental/auth/*": ["packages/auth/src/*"],
+      "@car-rental/billing/*": ["packages/billing/src/*"],
+      "@car-rental/messaging/*": ["packages/messaging/src/*"],
+      "@car-rental/web/*": ["apps/web/src/*"],
+      "@car-rental/mobile/*": ["apps/mobile/src/*"]
+    },
+    "types": ["node", "vitest/globals"]
+  },
+  "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
+}

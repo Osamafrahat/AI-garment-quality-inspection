@@ -1,0 +1,36 @@
+{
+  "name": "@car-rental/auth",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/config.ts",
+    "./permissions": "./src/permissions.ts",
+    "./middleware": "./src/middleware.ts",
+    "./password": "./src/password.ts"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .tsbuildinfo"
+  },
+  "dependencies": {
+    "next-auth": "^5.0.0-beta.18",
+    "@auth/prisma-adapter": "^2.0.0",
+    "next": "^15.5.0",
+    "zod": "^3.23.0",
+    "@car-rental/core": "workspace:*",
+    "@car-rental/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "typescript": "^5.6.0",
+    "vitest": "^1.5.0",
+    "eslint": "^8.57.0"
+  }
+}

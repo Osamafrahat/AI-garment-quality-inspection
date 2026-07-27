@@ -1,0 +1,36 @@
+# Worker Dockerfile
+FROM node:24-alpine AS base
+
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+COPY packages ./packages
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
+
+FROM deps AS generate
+WORKDIR /app
+RUN pnpm db:generate
+
+FROM generate AS builder
+WORKDIR /app
+COPY . .
+RUN pnpm build --filter=@car-rental/db
+
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+
+COPY --from=builder --chown=nodejs:nodejs /app/packages/db/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/packages/db/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/packages/db/package.json ./package.json
+COPY --from=builder --chown=nodejs:nodejs /app/packages/db/prisma ./prisma
+
+USER nodejs
+
+CMD ["node", "dist/index.js"]

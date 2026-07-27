@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "CarRental Staff",
+    "slug": "carrental-staff",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carrental.staff",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera for vehicle inspections and damage documentation.",
+        "NSPhotoLibraryUsageDescription": "This app accesses photos for uploading inspection images.",
+        "NSLocationWhenInUseUsageDescription": "This app uses location for GPS tracking of rental vehicles."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.carrental.staff",
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-notifications",
+      ["expo-camera", { "cameraPermission": "Allow CarRental to access camera for vehicle inspections" }],
+      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "Allow CarRental to access location for GPS tracking" }],
+      ["expo-image-picker", { "photosPermission": "Allow CarRental to access photos for inspection uploads" }]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
+    "owner": "your-expo-account"
+  }
+}
