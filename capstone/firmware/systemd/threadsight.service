@@ -1,0 +1,21 @@
+[Unit]
+Description=ThreadSight AI inspection node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/threadsight/firmware
+Environment=TS_MOCK=0
+Environment=TS_GATEWAY_URL=http://127.0.0.1:8000
+Environment=TS_MQTT_HOST=127.0.0.1
+Environment=TS_MODEL_DIR=/home/pi/threadsight/ml/artifacts
+Environment=TS_CALIBRATION=/home/pi/threadsight/firmware/calibration/calibration.json
+Environment=TS_THRESHOLD=0.70
+ExecStart=/usr/bin/python3 -m threadsight.main
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

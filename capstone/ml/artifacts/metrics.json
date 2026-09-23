@@ -1,0 +1,53 @@
+{
+  "model_version": "threadsight-sklearn-v1",
+  "backend": "sklearn",
+  "threshold": 0.5,
+  "accuracy": 0.9,
+  "macro_f1": 0.8996,
+  "defect_recall_dr03": 1.0,
+  "false_reject_rate_dr04": 0.0133,
+  "test_samples": 450,
+  "min_accuracy_required": 0.8,
+  "pass_challenge_floor": true,
+  "pass_dr01_target": true,
+  "pass_dr03": true,
+  "pass_dr04": true,
+  "per_class": {
+    "ok": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 75
+    },
+    "hole": {
+      "precision": 0.9589,
+      "recall": 0.9333,
+      "f1": 0.9459,
+      "support": 75
+    },
+    "stain": {
+      "precision": 0.9403,
+      "recall": 0.84,
+      "f1": 0.8873,
+      "support": 75
+    },
+    "broken_thread": {
+      "precision": 0.8333,
+      "recall": 0.8667,
+      "f1": 0.8497,
+      "support": 75
+    },
+    "shade_variation": {
+      "precision": 0.8923,
+      "recall": 0.7733,
+      "f1": 0.8286,
+      "support": 75
+    },
+    "print_misalignment": {
+      "precision": 0.8043,
+      "recall": 0.9867,
+      "f1": 0.8862,
+      "support": 75
+    }
+  }
+}

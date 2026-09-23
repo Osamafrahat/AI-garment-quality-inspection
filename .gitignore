@@ -54,3 +54,12 @@ apps/mobile/build
 *.pem
 .vercel
 .netlify
+
+# Capstone local envs / caches
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+capstone/gateway/gateway.db
+capstone/gateway/latest_metrics.json
+capstone/ml/train_torch.log

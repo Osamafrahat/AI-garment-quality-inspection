@@ -1,0 +1,26 @@
+{
+  "backend": "sklearn",
+  "val_accuracy": 0.8844444444444445,
+  "train_seconds": 12.76,
+  "params": {
+    "trees": 400,
+    "features": "pixels+gradhist"
+  },
+  "artifacts": {
+    "model": "model.pkl"
+  },
+  "model_version": "threadsight-sklearn-v1",
+  "classes": [
+    "ok",
+    "hole",
+    "stain",
+    "broken_thread",
+    "shade_variation",
+    "print_misalignment"
+  ],
+  "seed": 42,
+  "size": 128,
+  "dataset": "C:\\Users\\Mega Store\\OneDrive\\Documents\\Default Project\\capstone\\ml\\dataset",
+  "train_count": 2100,
+  "val_count": 450
+}
