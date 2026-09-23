@@ -1,5 +1,5 @@
 {
-  "name": "@car-rental/core",
+  "name": "@threadsight/core",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",

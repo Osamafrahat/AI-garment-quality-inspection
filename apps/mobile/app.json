@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CarRental Staff",
-    "slug": "carrental-staff",
+    "name": "ThreadSight Staff",
+    "slug": "threadsight-staff",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.carrental.staff",
+      "bundleIdentifier": "com.threadsight.staff",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera for vehicle inspections and damage documentation.",
         "NSPhotoLibraryUsageDescription": "This app accesses photos for uploading inspection images.",
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.carrental.staff",
+      "package": "com.threadsight.staff",
       "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
@@ -36,9 +36,9 @@
       "expo-router",
       "expo-secure-store",
       "expo-notifications",
-      ["expo-camera", { "cameraPermission": "Allow CarRental to access camera for vehicle inspections" }],
-      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "Allow CarRental to access location for GPS tracking" }],
-      ["expo-image-picker", { "photosPermission": "Allow CarRental to access photos for inspection uploads" }]
+      ["expo-camera", { "cameraPermission": "Allow ThreadSight to access camera for garment inspections" }],
+      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "Allow ThreadSight to access location for factory floor context" }],
+      ["expo-image-picker", { "photosPermission": "Allow ThreadSight to access photos for inspection uploads" }]
     ],
     "experiments": {
       "typedRoutes": true

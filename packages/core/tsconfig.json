@@ -17,7 +17,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@car-rental/core/*": ["./src/*"]
+      "@threadsight/core/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

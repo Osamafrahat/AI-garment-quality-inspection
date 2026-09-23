@@ -1,5 +1,5 @@
 {
-  "name": "@car-rental/messaging",
+  "name": "@threadsight/messaging",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -28,8 +28,8 @@
     "react-email": "^2.1.0",
     "@react-email/components": "^0.0.16",
     "react": "^19.0.0",
-    "@car-rental/core": "workspace:*",
-    "@car-rental/db": "workspace:*"
+    "@threadsight/core": "workspace:*",
+    "@threadsight/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

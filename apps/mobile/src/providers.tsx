@@ -1,7 +1,8 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TRPCReactProvider } from '@car-rental/api-contracts/trpc';
+import { TRPCReactProvider } from '@threadsight/api-contracts/trpc';
+import { createTRPCClient } from '../lib/trpc';
 import { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

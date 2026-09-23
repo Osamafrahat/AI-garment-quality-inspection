@@ -6,19 +6,22 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Car Rental Management',
-  description: 'Complete car rental management platform',
+  title: 'ThreadSight — AI Garment Quality Inspection',
+  description: 'Real-time AI quality inspection dashboard for garment manufacturing',
 };
 
 export const viewport: Viewport = {
-  themeColor: '#2563eb',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', color: '#020617' },
+  ],
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" class={inter.variable}>
+    <html lang="en" className={`${inter.variable} dark`} suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <Providers>{children}</Providers>
       </body>

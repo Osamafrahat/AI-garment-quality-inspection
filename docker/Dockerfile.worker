@@ -16,7 +16,7 @@ RUN pnpm db:generate
 FROM generate AS builder
 WORKDIR /app
 COPY . .
-RUN pnpm build --filter=@car-rental/db
+RUN pnpm build --filter=@threadsight/db
 
 FROM base AS runner
 WORKDIR /app

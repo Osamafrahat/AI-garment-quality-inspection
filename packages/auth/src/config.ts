@@ -3,10 +3,10 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import AppleProvider from 'next-auth/providers/apple';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@car-rental/db/client';
+import { prisma } from '@threadsight/db/client';
 import { comparePassword, hashPassword } from './password';
-import { getEnv } from '@car-rental/core/config';
-import { logger } from '@car-rental/core/logging';
+import { getEnv } from '@threadsight/core/config';
+import { logger } from '@threadsight/core/logging';
 
 const { AUTH_SECRET, AUTH_URL, NODE_ENV } = getEnv();
 

@@ -17,14 +17,14 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@car-rental/core/*": ["packages/core/src/*"],
-      "@car-rental/db/*": ["packages/db/src/*"],
-      "@car-rental/api-contracts/*": ["packages/api-contracts/src/*"],
-      "@car-rental/auth/*": ["packages/auth/src/*"],
-      "@car-rental/billing/*": ["packages/billing/src/*"],
-      "@car-rental/messaging/*": ["packages/messaging/src/*"],
-      "@car-rental/web/*": ["apps/web/src/*"],
-      "@car-rental/mobile/*": ["apps/mobile/src/*"]
+      "@threadsight/core/*": ["packages/core/src/*"],
+      "@threadsight/db/*": ["packages/db/src/*"],
+      "@threadsight/api-contracts/*": ["packages/api-contracts/src/*"],
+      "@threadsight/auth/*": ["packages/auth/src/*"],
+      "@threadsight/billing/*": ["packages/billing/src/*"],
+      "@threadsight/messaging/*": ["packages/messaging/src/*"],
+      "@threadsight/web/*": ["apps/web/src/*"],
+      "@threadsight/mobile/*": ["apps/mobile/src/*"]
     },
     "types": ["node", "vitest/globals"]
   },

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { paginationSchema, idSchema, ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema } from '@car-rental/core/validation';
+import { paginationSchema, idSchema, ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema } from '@threadsight/core/validation';
 
 export const vehicleCategorySchema = z.object({
   id: ulidSchema.optional(),

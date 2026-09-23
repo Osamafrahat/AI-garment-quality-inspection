@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { logger } from '@car-rental/core/logging';
-import { getEnv } from '@car-rental/core/config';
+import { logger } from '@threadsight/core/logging';
+import { getEnv } from '@threadsight/core/config';
 
 declare global {
   var prisma: PrismaClient | undefined;

@@ -1,5 +1,5 @@
 {
-  "name": "@car-rental/web",
+  "name": "@threadsight/web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -41,11 +41,11 @@
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.3.0",
     "class-variance-authority": "^0.7.0",
-    "@car-rental/core": "workspace:*",
-    "@car-rental/db": "workspace:*",
-    "@car-rental/auth": "workspace:*",
-    "@car-rental/billing": "workspace:*",
-    "@car-rental/api-contracts": "workspace:*"
+    "@threadsight/core": "workspace:*",
+    "@threadsight/db": "workspace:*",
+    "@threadsight/auth": "workspace:*",
+    "@threadsight/billing": "workspace:*",
+    "@threadsight/api-contracts": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

@@ -44,8 +44,8 @@
     "date-fns": "^3.6.0",
     "decimal.js": "^10.4.0",
     "ulid": "^2.3.0",
-    "@car-rental/core": "workspace:*",
-    "@car-rental/api-contracts": "workspace:*"
+    "@threadsight/core": "workspace:*",
+    "@threadsight/api-contracts": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema, paginationSchema } from '@car-rental/core/validation';
+import { ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema, paginationSchema } from '@threadsight/core/validation';
 
 export const bookingRouter = {
   getBookings: {

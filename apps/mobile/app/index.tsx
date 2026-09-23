@@ -17,7 +17,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>CarRental Staff</Text>
+      <Text style={styles.title}>ThreadSight Staff</Text>
       <Text style={styles.subtitle}>Fleet Management</Text>
 
       <View style={styles.list}>

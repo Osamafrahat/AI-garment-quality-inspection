@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { Decimal } from 'decimal.js';
-import { logger } from '@car-rental/core/logging';
+import { logger } from '@threadsight/core/logging';
 
 export interface InvoiceData {
   invoiceNumber: string;
@@ -148,7 +148,7 @@ function drawFooter(doc: PDFKit.PDFDocument) {
   doc.moveDown(2);
   doc.fontSize(8).font('Helvetica').fillColor('#888');
   doc.text('Thank you for your business!', 50, doc.y, { align: 'center', width: 495 });
-  doc.text('Car Rental Management System', { align: 'center', width: 495 });
+  doc.text('ThreadSight Inspection Report', { align: 'center', width: 495 });
 }
 
 function formatCurrency(amount: Decimal): string {

@@ -1,7 +1,7 @@
 import { auth } from './config';
 import { hasPermission, type Permission } from './permissions';
 import { NextResponse } from 'next/server';
-import { AppError } from '@car-rental/core/errors';
+import { AppError } from '@threadsight/core/errors';
 
 export const authMiddleware = auth((req) => {
   const pathname = req.nextUrl.pathname;

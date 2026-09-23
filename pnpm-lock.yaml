@@ -29,10 +29,10 @@ importers:
 
   apps/mobile:
     dependencies:
-      '@car-rental/api-contracts':
+      '@threadsight/api-contracts':
         specifier: workspace:*
         version: link:../../packages/api-contracts
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@hookform/resolvers':
@@ -147,19 +147,19 @@ importers:
 
   apps/web:
     dependencies:
-      '@car-rental/api-contracts':
+      '@threadsight/api-contracts':
         specifier: workspace:*
         version: link:../../packages/api-contracts
-      '@car-rental/auth':
+      '@threadsight/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@car-rental/billing':
+      '@threadsight/billing':
         specifier: workspace:*
         version: link:../../packages/billing
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@car-rental/db':
+      '@threadsight/db':
         specifier: workspace:*
         version: link:../../packages/db
       '@hookform/resolvers':
@@ -280,7 +280,7 @@ importers:
 
   packages/api-contracts:
     dependencies:
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../core
       '@trpc/server':
@@ -311,10 +311,10 @@ importers:
       '@auth/prisma-adapter':
         specifier: ^2.0.0
         version: 2.11.3(@prisma/client@7.10.0(prisma@7.10.0(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.9.3))(typescript@5.9.3))
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../core
-      '@car-rental/db':
+      '@threadsight/db':
         specifier: workspace:*
         version: link:../db
       next:
@@ -342,10 +342,10 @@ importers:
 
   packages/billing:
     dependencies:
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../core
-      '@car-rental/db':
+      '@threadsight/db':
         specifier: workspace:*
         version: link:../db
       decimal.js:
@@ -410,7 +410,7 @@ importers:
 
   packages/db:
     dependencies:
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../core
       '@prisma/adapter-pg':
@@ -447,10 +447,10 @@ importers:
 
   packages/messaging:
     dependencies:
-      '@car-rental/core':
+      '@threadsight/core':
         specifier: workspace:*
         version: link:../core
-      '@car-rental/db':
+      '@threadsight/db':
         specifier: workspace:*
         version: link:../db
       '@react-email/components':

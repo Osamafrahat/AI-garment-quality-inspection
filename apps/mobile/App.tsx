@@ -34,7 +34,7 @@ export default function App() {
 function HomeScreen() {
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>CarRental Mobile</Text>
+      <Text style={styles.title}>ThreadSight Mobile</Text>
       <Text style={styles.subtitle}>Staff App - Coming Soon</Text>
     </View>
   );

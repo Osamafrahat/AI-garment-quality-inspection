@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { logger } from '@car-rental/core/logging';
+import { logger } from '@threadsight/core/logging';
 
 export interface PricingInput {
   dailyRate: Decimal;

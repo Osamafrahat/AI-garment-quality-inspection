@@ -1,5 +1,5 @@
 {
-  "name": "@car-rental/billing",
+  "name": "@threadsight/billing",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -22,8 +22,8 @@
     "stripe": "^15.0.0",
     "pdfkit": "^0.15.0",
     "decimal.js": "^10.4.0",
-    "@car-rental/core": "workspace:*",
-    "@car-rental/db": "workspace:*"
+    "@threadsight/core": "workspace:*",
+    "@threadsight/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

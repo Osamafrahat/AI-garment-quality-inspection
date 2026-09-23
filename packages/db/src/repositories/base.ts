@@ -1,7 +1,7 @@
 import { prisma } from '../client';
-import { AppError } from '@car-rental/core/errors';
-import { logger } from '@car-rental/core/logging';
-import { paginationSchema, createPaginationResponse, type PaginationParams } from '@car-rental/core/validation';
+import { AppError } from '@threadsight/core/errors';
+import { logger } from '@threadsight/core/logging';
+import { paginationSchema, createPaginationResponse, type PaginationParams } from '@threadsight/core/validation';
 
 export abstract class BaseRepository<T> {
   protected abstract modelName: string;

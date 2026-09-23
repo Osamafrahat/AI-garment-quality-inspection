@@ -29,7 +29,7 @@ export function getLogger(context?: Record<string, unknown>): Logger {
     },
     timestamp: pino.stdTimeFunctions.isoTime,
     base: {
-      service: 'car-rental',
+      service: 'threadsight',
       environment: NODE_ENV,
     },
   });

@@ -1,8 +1,8 @@
 import { stripe, constructWebhookEvent } from './client';
-import { pricing } from '@car-rental/billing/pricing';
-import { invoicing } from '@car-rental/billing/invoicing';
-import { logger } from '@car-rental/core/logging';
-import { prisma } from '@car-rental/db/client';
+import { pricing } from '@threadsight/billing/pricing';
+import { invoicing } from '@threadsight/billing/invoicing';
+import { logger } from '@threadsight/core/logging';
+import { prisma } from '@threadsight/db/client';
 import { Decimal } from 'decimal.js';
 
 export async function handleStripeWebhook(payload: string | Buffer, signature: string) {

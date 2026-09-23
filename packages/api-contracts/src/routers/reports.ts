@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ulidSchema, decimalSchema, dateSchema, paginationSchema } from '@car-rental/core/validation';
+import { ulidSchema, decimalSchema, dateSchema, paginationSchema } from '@threadsight/core/validation';
 
 export const reportRouter = {
   getDashboardStats: {

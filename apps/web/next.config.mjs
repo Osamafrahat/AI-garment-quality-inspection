@@ -1,17 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        '@car-rental/core': '../../packages/core/src',
-        '@car-rental/db': '../../packages/db/src',
-        '@car-rental/api-contracts': '../../packages/api-contracts/src',
-        '@car-rental/auth': '../../packages/auth/src',
-        '@car-rental/billing': '../../packages/billing/src',
-      },
-    },
-  },
+  transpilePackages: [
+    '@threadsight/core',
+    '@threadsight/db',
+    '@threadsight/auth',
+    '@threadsight/billing',
+    '@threadsight/api-contracts',
+  ],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
@@ -32,4 +28,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

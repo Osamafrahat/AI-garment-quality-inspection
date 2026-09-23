@@ -15,8 +15,8 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "@car-rental/core/*": ["../../packages/core/src/*"],
-      "@car-rental/api-contracts/*": ["../../packages/api-contracts/src/*"]
+      "@threadsight/core/*": ["../../packages/core/src/*"],
+      "@threadsight/api-contracts/*": ["../../packages/api-contracts/src/*"]
     },
     "baseUrl": "."
   },

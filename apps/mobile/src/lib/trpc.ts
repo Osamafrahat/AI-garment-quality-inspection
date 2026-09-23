@@ -1,5 +1,6 @@
 import { createTRPCReact } from '@trpc/react-query';
-import type { AppRouter } from '@car-rental/api-contracts/routers';
+import { httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '@threadsight/api-contracts/routers';
 
 export const trpc = createTRPCReact<AppRouter>();
 

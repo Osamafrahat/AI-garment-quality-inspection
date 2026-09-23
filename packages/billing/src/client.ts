@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import { getEnv } from '@car-rental/core/config';
-import { logger } from '@car-rental/core/logging';
+import { getEnv } from '@threadsight/core/config';
+import { logger } from '@threadsight/core/logging';
 
 const { STRIPE_SECRET_KEY } = getEnv();
 

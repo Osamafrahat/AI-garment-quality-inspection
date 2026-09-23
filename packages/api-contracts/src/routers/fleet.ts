@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { idSchema, ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema, paginationSchema } from '@car-rental/core/validation';
+import { idSchema, ulidSchema, emailSchema, phoneSchema, decimalSchema, dateSchema, dateTimeSchema, paginationSchema } from '@threadsight/core/validation';
 
 export const fleetRouter = {
   getCategories: {
