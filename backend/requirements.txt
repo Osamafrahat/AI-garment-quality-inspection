@@ -1,0 +1,16 @@
+# --- API server (required) ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pydantic>=2.8
+pydantic-settings>=2.4
+pillow>=10.4
+numpy>=1.26
+
+# Deliberately no torch here: the API starts in demo mode without it, so the
+# server, the UI, and the test suite all work on a lightweight install.
+# Real inference and training need the optional extras — see requirements-ml.txt.
+
+# --- Dev / test ---
+pytest>=8.3
+httpx>=0.27

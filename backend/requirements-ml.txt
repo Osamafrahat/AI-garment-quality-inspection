@@ -1,0 +1,13 @@
+# Optional: everything needed for real inference and for training.
+#
+#   pip install -r requirements-ml.txt --index-url https://download.pytorch.org/whl/cpu
+#
+# The index URL above is the CPU-only build, which is an order of magnitude
+# smaller than the default wheel and is all you need without an NVIDIA GPU.
+# Swap in https://download.pytorch.org/whl/cu124 for CUDA.
+#
+# Once installed, put a checkpoint at backend/models/best.pt and the API stops
+# reporting demo mode.
+
+torch>=2.4
+torchvision>=0.19

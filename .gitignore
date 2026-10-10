@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Model artifacts & data (large, regenerable)
+backend/models/*.pt
+backend/models/*.pth
+backend/models/*.onnx
+backend/models/*.torchscript
+data/train/
+data/val/
+data/raw/
+*.jpg
+*.jpeg
+*.png
+!docs/**/*.png
+# The rules above are for datasets and screenshots. The bundled demo images are
+# small app assets and must be tracked — the sample buttons break without them.
+!frontend/public/*.jpg
+!frontend/public/*.png
+
+# Node
+node_modules/
+dist/
+.vite/
+*.local
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

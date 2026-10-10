@@ -1,0 +1,67 @@
+{
+  "best_macro_f1": 0.7724,
+  "best_val": {
+    "loss": 1.1504708433151245,
+    "accuracy": 0.79,
+    "macro_f1": 0.7723593073593074
+  },
+  "classes": [
+    "broken_thread",
+    "color_fade",
+    "hole",
+    "normal",
+    "pilling",
+    "print_misalign",
+    "seam_defect",
+    "snag",
+    "stain",
+    "texture_irregular"
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "train": {
+        "loss": 2.2662842750549315,
+        "accuracy": 0.1625,
+        "macro_f1": 0.15694570278337497
+      },
+      "val": {
+        "loss": 2.2455112648010256,
+        "accuracy": 0.25,
+        "macro_f1": 0.2513925634049473
+      },
+      "lr": 0.00022875,
+      "seconds": 66.3
+    },
+    {
+      "epoch": 2,
+      "train": {
+        "loss": 2.170518493652344,
+        "accuracy": 0.2725,
+        "macro_f1": 0.26852131733089524
+      },
+      "val": {
+        "loss": 2.1332398796081544,
+        "accuracy": 0.38,
+        "macro_f1": 0.35935553767361544
+      },
+      "lr": 8.625000000000004e-05,
+      "seconds": 52.4
+    },
+    {
+      "epoch": 3,
+      "train": {
+        "loss": 1.791144986152649,
+        "accuracy": 0.5675,
+        "macro_f1": 0.5577178911398709
+      },
+      "val": {
+        "loss": 1.1504708433151245,
+        "accuracy": 0.79,
+        "macro_f1": 0.7723593073593074
+      },
+      "lr": 1.4999999999999999e-05,
+      "seconds": 159.5
+    }
+  ]
+}
