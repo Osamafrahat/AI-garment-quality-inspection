@@ -224,8 +224,10 @@ the repo root. Copy `.env.example` to `.env` to start.
 | --- | --- | --- |
 | `GARMENT_CORS_ORIGINS` | `http://localhost:5173,…` | Comma-separated allowed origins |
 | `GARMENT_MODEL_WEIGHTS` | `backend/models/best.pt` | Checkpoint location |
+| `GARMENT_CLASS_NAMES_PATH` | `backend/models/class_names.json` | Class order, read without unpickling the checkpoint |
 | `GARMENT_INPUT_SIZE` | `224` | Square side the model expects |
 | `GARMENT_DEVICE` | `auto` | `auto`, `cpu`, `cuda`, or `mps` |
+| `GARMENT_MAX_IMAGE_SIDE` | `2400` | Larger uploads are downscaled to this before analysis, to bound memory |
 | `GARMENT_CONFIDENCE_THRESHOLD` | `0.35` | Predictions below this are dropped |
 | `GARMENT_MAX_DEFECTS` | `3` | Cap on returned defects |
 | `GARMENT_ALLOW_DEMO_FALLBACK` | `true` | Serve placeholders when no checkpoint exists |
