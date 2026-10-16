@@ -1,0 +1,24 @@
+# Local production-shaped run, and the template for a single-box/VPS deploy.
+#
+#   docker compose up --build
+#   open http://localhost:8000/api/health
+#
+# The frontend is NOT in here on purpose: it deploys to Vercel as a static
+# build and points at this API via VITE_API_BASE.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: garment-api:latest
+    container_name: garment-api
+    ports:
+      - "8000:8000"
+    environment:
+      GARMENT_ENVIRONMENT: production
+      GARMENT_DEVICE: cpu
+      # Allow the deployed dashboard to call this API. Add your Vercel domain
+      # (e.g. https://your-app.vercel.app) before going live.
+      GARMENT_CORS_ORIGINS: "http://localhost:5173,http://127.0.0.1:5173"
+    restart: unless-stopped

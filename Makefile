@@ -8,7 +8,8 @@ FRONTEND_DIR := frontend
 DATA_DIR := data
 
 .PHONY: help install-backend install-frontend install-ml install dev-backend \
-        dev-frontend dev test synth train clean
+        dev-frontend dev test synth train docker-build docker-up docker-down \
+        clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -45,6 +46,16 @@ synth: ## Generate a synthetic dataset (proves the pipeline works)
 
 train: ## Train a checkpoint from the dataset in data/
 	cd $(BACKEND_DIR) && .venv/Scripts/python -m app.training.train --data ../$(DATA_DIR)
+
+# ------------------------------------------------------------------ docker
+docker-build: ## Build the backend image (run from the repo root)
+	docker build -t garment-api .
+
+docker-up: ## Build and run the API container on :8000
+	docker compose up --build -d
+
+docker-down: ## Stop the container
+	docker compose down
 
 # --------------------------------------------------------------- tidy
 clean: ## Remove build artifacts and caches (leaves data/ and models/ alone)

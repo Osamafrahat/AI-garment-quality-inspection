@@ -15,6 +15,12 @@ backend/models/*.pt
 backend/models/*.pth
 backend/models/*.onnx
 backend/models/*.torchscript
+# best.pt is the exception: it is committed on purpose (15.6 MB) so that any
+# clean clone, CI run, or container build serves real inference instead of
+# falling back to demo mode or re-training on every build. Delete this line if
+# you would rather train during the build. (Must come after the ignores above —
+# git applies patterns in order and the last match wins.)
+!backend/models/best.pt
 data/train/
 data/val/
 data/raw/

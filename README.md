@@ -79,10 +79,13 @@ confidence bars, and boxes drawn over the garment.
 
 ## Getting real inference
 
-Demo mode becomes real inference once a checkpoint exists at
-`backend/models/best.pt`. Install the ML extras first (`requirements-ml.txt`),
-then the fastest way to produce a checkpoint is the bundled synthetic dataset,
-which exercises the entire pipeline end-to-end:
+A checkpoint ships with the repo at `backend/models/best.pt`, so a fresh clone
+is already in inference mode — the section below is only needed if you want to
+retrain or you deleted the weights.
+
+Install the ML extras first (`requirements-ml.txt`), then the fastest way to
+produce a checkpoint is the bundled synthetic dataset, which exercises the
+entire pipeline end-to-end:
 
 ```bash
 cd backend
@@ -234,6 +237,84 @@ the repo root. Copy `.env.example` to `.env` to start.
 
 ---
 
+## Deployment
+
+The app splits in two, and only the backend carries PyTorch:
+
+| Piece | Target | Why there |
+| --- | --- | --- |
+| React dashboard | Vercel | 568 KB of static files, no server needed |
+| FastAPI + torch | Any Docker host | `torch` is **734 MB** installed — over Vercel's **500 MB** Python limit |
+
+Measured, not guessed: `torch` alone is 508.8 MB on disk, so the API function
+would never build on Vercel. The dashboard has no such constraint, so the halves
+deploy separately and talk over HTTPS.
+
+### 1. Backend — container
+
+A `Dockerfile` sits at the repo root (build **from the root**, not `backend/`):
+
+```bash
+docker build -t garment-api .
+docker run --rm -p 8000:8000 garment-api
+curl http://127.0.0.1:8000/api/health     # {"status":"ok",...,"model_ready":true}
+```
+
+or `docker compose up --build`, which also pre-set CORS for local dev.
+
+The image listens on `${PORT:-8000}`, so Render, Railway and Hugging Face Spaces
+can inject their own port. It runs as a non-root user and ships a healthcheck
+against `/api/health`.
+
+**Model weights.** `backend/models/best.pt` (15.6 MB) is committed, so a clean
+clone or CI build serves real inference immediately — no training at deploy time.
+If it's ever missing, the Dockerfile generates a synthetic dataset and trains a
+small model during the build instead (kept to batch 8 / 2 epochs because build
+containers are often memory-capped — it OOMs at batch 32 inside a 3 GB VM).
+
+**Getting a URL:**
+
+| Platform | How | Cost |
+| --- | --- | --- |
+| Hugging Face Spaces | New Space → Docker → push this repo | Free CPU, no card |
+| Railway | `railway init` in the repo, Dockerfile auto-detected | ~$5/mo credit, card required |
+| Render | New **Web Service** → repo → Docker | Free tier, spins down after idle |
+| Fly.io | `fly launch --no-deploy` then `fly deploy` (`flyctl` already installed) | Card required |
+| Any VPS | `docker compose up -d` behind a reverse proxy | ~$5/mo |
+
+### 2. Frontend — Vercel
+
+Import the GitHub repo → framework preset **Vite** → build `npm run build`,
+output directory `dist`. Then set one environment variable:
+
+```
+VITE_API_BASE=https://<your-backend-host>
+```
+
+> **This must be set before the build.** `import.meta.env` is inlined into the
+> JS bundle at build time, so changing it afterwards does nothing until you
+> redeploy. Leave it unset only if a proxy makes `/api` same-origin.
+
+And on the backend, allow your Vercel domain (comma-separated):
+
+```
+GARMENT_CORS_ORIGINS=https://your-app.vercel.app
+```
+
+**Avoiding CORS entirely:** instead of `VITE_API_BASE`, add a rewrite in
+`vercel.json` so the dashboard calls its own `/api` and Vercel proxies it —
+same origin, no CORS config:
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://<your-backend-host>/api/:path*" }
+  ]
+}
+```
+
+---
+
 ## Testing
 
 ```bash
@@ -260,9 +341,12 @@ it posts held-out images through the live server and prints the verdicts.
 ## Project layout
 
 ```
+Dockerfile                 Backend image (build from the repo root)
+docker-compose.yml         Local / single-box run of the API
 backend/
   requirements.txt        API server + test deps (no torch)
   requirements-ml.txt     torch + torchvision, for training and real inference
+  models/best.pt          Trained checkpoint (committed — 15.6 MB)
   smoke_infer.py          Live-server inference smoke test
   app/
     main.py               FastAPI app factory + startup lifespan

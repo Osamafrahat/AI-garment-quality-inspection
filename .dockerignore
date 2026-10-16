@@ -1,0 +1,17 @@
+.git
+.gitignore
+**/.venv
+venv
+**/node_modules
+frontend/dist
+frontend/.vite
+**/__pycache__
+**/*.pyc
+backend/.pytest_cache
+backend/smoke_infer.py
+data/
+.env
+.env.*
+!.env.example
+*.md
+!README.md
