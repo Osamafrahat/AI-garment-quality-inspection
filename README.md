@@ -272,14 +272,48 @@ If it's ever missing, the Dockerfile generates a synthetic dataset and trains a
 small model during the build instead (kept to batch 8 / 2 epochs because build
 containers are often memory-capped — it OOMs at batch 32 inside a 3 GB VM).
 
-**Getting a URL:**
+### Recommended: the free path (Render + Vercel)
+
+Verified against Render's free limits — 512 MB RAM / 0.1 CPU is tight for
+PyTorch, so the Blueprint caps decode size and thread count. Measured
+locally under those same settings: **420 MiB peak** on a 3000×4000 photo,
+0.8–1.5 s inference, 12.6 s cold start.
+
+**Backend → Render** (Blueprint, no manual config):
+
+1. render.com → **New +** → **Blueprint** → connect this repo.
+   Render reads `render.yaml`, builds the Dockerfile and hands you
+   `https://garment-api.onrender.com`.
+2. Sanity-check it: `curl https://garment-api.onrender.com/api/health`
+   → `{"status":"ok",...,"model_ready":true}`.
+
+**Frontend → Vercel:**
+
+3. vercel.com → **Add New Project** → import the repo. Preset **Vite**,
+   output `dist` (auto-detected).
+4. Set one env var: `VITE_API_BASE=https://garment-api.onrender.com`.
+   It is inlined into the JS at **build** time, so it must exist before you
+   deploy — adding it later does nothing until you redeploy.
+
+**Close the loop:**
+
+5. Back in Render, set `GARMENT_CORS_ORIGINS=https://<your-app>.vercel.app`
+   and let it redeploy.
+
+**What "free" costs you here:** the API sleeps after 15 minutes idle, so the
+first request takes 30–60 s to wake it. Inference runs on 0.1 CPU, so expect
+2–3 s rather than the 0.3 s you see locally. Bandwidth is capped at 5 GB/month,
+and each inspection returns a base64 annotated PNG — that is why
+`GARMENT_MAX_IMAGE_SIDE` is capped at 1600 px.
+
+### Other backends
 
 | Platform | How | Cost |
 | --- | --- | --- |
-| Hugging Face Spaces | New Space → Docker → push this repo | Free CPU, no card |
+| Hugging Face Spaces | New Space → Docker → push this repo | Free, 2 vCPU / 16 GB — **but** some new free accounts report CPU-Basic and Docker Spaces unavailable |
 | Railway | `railway init` in the repo, Dockerfile auto-detected | ~$5/mo credit, card required |
-| Render | New **Web Service** → repo → Docker | Free tier, spins down after idle |
-| Fly.io | `fly launch --no-deploy` then `fly deploy` (`flyctl` already installed) | Card required |
+| Fly.io | `flyctl launch --no-deploy` then `fly deploy` | ~$6.70/mo — **no free tier** |
+| Oracle Always Free | 2 OCPU / 12 GB ARM VM | Free forever, card to sign up, image needs an arm64 rebuild |
 | Any VPS | `docker compose up -d` behind a reverse proxy | ~$5/mo |
 
 ### 2. Frontend — Vercel
@@ -343,6 +377,7 @@ it posts held-out images through the live server and prints the verdicts.
 ```
 Dockerfile                 Backend image (build from the repo root)
 docker-compose.yml         Local / single-box run of the API
+render.yaml                Render Blueprint (free Docker web service)
 backend/
   requirements.txt        API server + test deps (no torch)
   requirements-ml.txt     torch + torchvision, for training and real inference

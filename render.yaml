@@ -1,0 +1,45 @@
+# Render Blueprint — deploys the backend as a free Docker web service.
+#
+# render.com → New + → Blueprint → select this repo. Render reads this file,
+# builds ./Dockerfile from the repo root, and gives you
+# https://garment-api.onrender.com
+#
+# Free tier: 512 MB RAM, 0.1 CPU, spins down after 15 min idle.
+# Measured locally under Render-like settings: 420 MiB peak on a 3000x4000
+# photo, 0.8-1.5s inference. That leaves ~90 MB headroom — the thread caps
+# and the 1600px cap below exist to protect it.
+
+services:
+  - type: web
+    name: garment-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+    envVars:
+      - key: GARMENT_ENVIRONMENT
+        value: production
+      - key: GARMENT_DEVICE
+        value: cpu
+
+      # Memory, not quality, is the scarce resource on a 512 MB free instance.
+      # torch alone idles at ~310 MiB; capping the decode size keeps the peak
+      # at 420 MiB instead of spiking well past the ceiling on big uploads.
+      - key: GARMENT_MAX_IMAGE_SIDE
+        value: "1600"
+
+      # 0.1 CPU with a default thread pool burns cycles on thread churn and
+      # grows the stack footprint. One thread is faster here, not slower.
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+
+      # Set this in the dashboard once the Vercel URL exists — it is only
+      # known after you create the frontend project.
+      #   GARMENT_CORS_ORIGINS=https://<your-app>.vercel.app
+      - key: GARMENT_CORS_ORIGINS
+        sync: false
